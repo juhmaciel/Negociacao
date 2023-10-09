@@ -1,77 +1,72 @@
-# Importa as bibliotecas necessárias
-import os
-import sys
-import math
+<html>
+<head>
+  <title>Calculadora de desconto</title>
+  // Importa as bibliotecas necessárias
+const fs = require("fs");
 
-# Define as constantes
-QNT_PARCELAS_MAX = 12
-VALOR_PARCELA_MAX = 150
+// Define as constantes
+const QNT_PARCELAS_MAX = 12;
+const VALOR_PARCELA_MAX = 150;
 
-# Define a função para gerar o código de desconto
-def gerar_desconto(valor, desconto_vista, desconto_parcelado, qtd_parcelas):
-  """
-  Gera um código de desconto de pagamento à vista e parcelado.
+// Obtém os dados do formulário
+const valor = Number(document.querySelector("input[name='valor']").value);
+const desconto_vista = Number(document.querySelector("input[name='desconto_vista']").value);
+const desconto_parcelado = Number(document.querySelector("input[name='desconto_parcelado']").value);
+const qtd_parcelas = Number(document.querySelector("input[name='qtd_parcelas']").value);
 
-  Args:
-    valor: O valor do produto ou serviço.
-    desconto_vista: O desconto em porcentagem para pagamento à vista.
-    desconto_parcelado: O desconto em porcentagem para pagamento parcelado.
-    qtd_parcelas: A quantidade de parcelas.
+// Valida a quantidade de parcelas
+if (qtd_parcelas > QNT_PARCELAS_MAX) {
+  alert("A quantidade de parcelas não pode ser superior a 12.");
+  return;
+}
 
-  Returns:
-    Um dicionário contendo o código de desconto, o valor do desconto e o valor final.
-  """
+// Calcula o valor do desconto à vista
+const valor_desconto_vista = valor * desconto_vista / 100;
 
-  # Valida a quantidade de parcelas
+// Calcula o valor de cada parcela
+const valor_parcela = valor / qtd_parcelas;
 
-  if qtd_parcelas > QNT_PARCELAS_MAX:
-    raise ValueError("A quantidade de parcelas não pode ser superior a 12.")
+// Calcula o valor do desconto parcelado
+const valor_desconto_parcelado = valor_parcela * desconto_parcelado / 100;
 
-  # Calcula o valor do desconto à vista
+// Calcula o valor final
+const valor_final = valor - valor_desconto_vista - valor_desconto_parcelado;
 
-  valor_desconto_vista = valor * desconto_vista / 100
+// Gera o código de desconto
+const codigo_desconto = f"{desconto_vista}-{desconto_parcelado}-{qtd_parcelas}";
 
-  # Calcula o valor do desconto parcelado
+// Exibe o resultado
+const resultado = `
+  <h2>Resultado</h2>
+  <ul>
+    <li>Código de desconto: ${codigo_desconto}</li>
+    <li>Valor do desconto: ${valor_desconto_vista + valor_desconto_parcelado}</li>
+    <li>Valor final: ${valor_final}</li>
+  </ul>
+`;
 
-  valor_parcela = valor / qtd_parcelas
-  valor_desconto_parcelado = valor_parcela * desconto_parcelado / 100
+document.querySelector("#resultado").innerHTML = resultado;
 
-  # Calcula o valor final
-
-  valor_final = valor - valor_desconto_vista - valor_desconto_parcelado
-
-  # Gera o código de desconto
-
-  codigo_desconto = f"{desconto_vista}-{desconto_parcelado}-{qtd_parcelas}"
-
-  return {
-    "codigo": codigo_desconto,
-    "desconto": valor_desconto_vista + valor_desconto_parcelado,
-    "valor_final": valor_final,
+// Salva o resultado em um arquivo
+fs.writeFile("resultado.html", resultado, "utf8", (err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("Resultado salvo com sucesso.");
   }
+});
+</head>
+<body>
+  <h1>Calculadora de desconto</h1>
 
-# Função principal
-def main():
-  # Obtém o valor do produto ou serviço
-  valor = float(input("Informe o valor do produto ou serviço: "))
+  <form action="/" method="post">
+    <input type="text" name="valor" placeholder="Valor do produto ou serviço">
+    <input type="number" name="desconto_vista" placeholder="Desconto à vista (%)">
+    <input type="number" name="desconto_parcelado" placeholder="Desconto parcelado (%)">
+    <input type="number" name="qtd_parcelas" placeholder="Quantidade de parcelas">
+    <button type="submit">Calcular</button>
+  </form>
 
-  # Obtém o desconto à vista
-  desconto_vista = float(input("Informe o desconto à vista em porcentagem: "))
-
-  # Obtém o desconto parcelado
-  desconto_parcelado = float(input("Informe o desconto parcelado em porcentagem: "))
-
-  # Obtém a quantidade de parcelas
-  qtd_parcelas = int(input("Informe a quantidade de parcelas: "))
-
-  # Gera o código de desconto
-  desconto = gerar_desconto(valor, desconto_vista, desconto_parcelado, qtd_parcelas)
-
-  # Exibe o código de desconto
-  print(f"Código de desconto: {desconto['codigo']}")
-  print(f"Valor do desconto: {desconto['desconto']}")
-  print(f"Valor final: {desconto['valor_final']}")
-
-# Chama a função principal
-if __name__ == "__main__":
-  main()
+  <div id="resultado"></div>
+</body>
+</html>

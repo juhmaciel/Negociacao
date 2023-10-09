@@ -50,5 +50,76 @@
             document.getElementById("resultado").textContent = `Total a pagar: R$ ${valorComDesconto.toFixed(2)}`;
         }
     </script>
+
+    <!DOCTYPE html>
+<html>
+<head>
+  <title>Calculadora de Pagamento</title>
+</head>
+<body>
+
+<h1>Calculadora de Pagamento</h1>
+
+<label for="statusSelect">Status:</label>
+<select id="statusSelect">
+  <option value="ativo">Ativo</option>
+  <option value="inativo">Inativo</option>
+</select>
+<br><br>
+
+<label for="valorTotal">Valor Total da Compra:</label>
+<input type="number" id="valorTotal" min="0" step="1"><br><br>
+
+<label for="descontoAVista">Desconto para Pagamento à Vista (R$):</label>
+<input type="number" id="descontoAVista" min="0" step="1"><br><br>
+
+<button onclick="calcularOpcoes()">Calcular Opções de Pagamento</button><br><br>
+
+<h2>Opções de Pagamento:</h2>
+<div id="opcoesPagamento"></div><br>
+
+<button onclick="copiarTexto()">Copiar Texto</button>
+
+<script>
+function calcularOpcoes() {
+  const status = document.getElementById('statusSelect').value;
+  const valorTotal = parseFloat(document.getElementById('valorTotal').value);
+  let mensagem = '';
+
+  if (status === 'inativo') {
+    const descontoAVista = parseFloat(document.getElementById('descontoAVista').value);
+
+    if (!isNaN(descontoAVista) && descontoAVista > 0) {
+      valorTotal -= descontoAVista;
+      mensagem += `Desconto para pagamento à vista aplicado: R$${descontoAVista}\n`;
+    }
+
+    const parcelas = 12;
+    const valorParcela = Math.max(150, valorTotal / parcelas);
+
+    mensagem += 'Opções de parcelamento no boleto:\n';
+    for (let i = 1; i <= parcelas; i++) {
+      mensagem += `Parcela ${i}: R$${valorParcela.toFixed(2)}\n`;
+    }
+  } else {
+    mensagem = 'Status ativo. Não há desconto aplicado.';
+  }
+
+  document.getElementById('opcoesPagamento').innerText = mensagem;
+}
+
+function copiarTexto() {
+  const opcoesPagamento = document.getElementById('opcoesPagamento').innerText;
+  const tempInput = document.createElement('textarea');
+  document.body.appendChild(tempInput);
+  tempInput.value = opcoesPagamento;
+  tempInput.select();
+  document.execCommand('copy');
+  document.body.removeChild(tempInput);
+}
+</script>
+
+</body>
+</html>
 </body>
 </html>

@@ -1,3 +1,13 @@
+# Importa as bibliotecas necessárias
+import os
+import sys
+import math
+
+# Define as constantes
+QNT_PARCELAS_MAX = 12
+VALOR_PARCELA_MAX = 150
+
+# Define a função para gerar o código de desconto
 def gerar_desconto(valor, desconto_vista, desconto_parcelado, qtd_parcelas):
   """
   Gera um código de desconto de pagamento à vista e parcelado.
@@ -14,7 +24,7 @@ def gerar_desconto(valor, desconto_vista, desconto_parcelado, qtd_parcelas):
 
   # Valida a quantidade de parcelas
 
-  if qtd_parcelas > 12:
+  if qtd_parcelas > QNT_PARCELAS_MAX:
     raise ValueError("A quantidade de parcelas não pode ser superior a 12.")
 
   # Calcula o valor do desconto à vista
@@ -40,15 +50,28 @@ def gerar_desconto(valor, desconto_vista, desconto_parcelado, qtd_parcelas):
     "valor_final": valor_final,
   }
 
+# Função principal
+def main():
+  # Obtém o valor do produto ou serviço
+  valor = float(input("Informe o valor do produto ou serviço: "))
 
-if __name__ == "__main__":
-  # Exemplo de uso
+  # Obtém o desconto à vista
+  desconto_vista = float(input("Informe o desconto à vista em porcentagem: "))
 
-  valor = 1000
-  desconto_vista = 10
-  desconto_parcelado = 5
-  qtd_parcelas = 6
+  # Obtém o desconto parcelado
+  desconto_parcelado = float(input("Informe o desconto parcelado em porcentagem: "))
 
+  # Obtém a quantidade de parcelas
+  qtd_parcelas = int(input("Informe a quantidade de parcelas: "))
+
+  # Gera o código de desconto
   desconto = gerar_desconto(valor, desconto_vista, desconto_parcelado, qtd_parcelas)
 
-  print(desconto)
+  # Exibe o código de desconto
+  print(f"Código de desconto: {desconto['codigo']}")
+  print(f"Valor do desconto: {desconto['desconto']}")
+  print(f"Valor final: {desconto['valor_final']}")
+
+# Chama a função principal
+if __name__ == "__main__":
+  main()

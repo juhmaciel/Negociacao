@@ -2,11 +2,20 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Negociar valor</title>
+  <title>Negociação para AS/WP</title>
+   <script>
+    // Calcula o valor da entrada
+    const valor = document.getElementById("valor").value;
+    const entrada = (valor * 0.25).toFixed(2);
+    document.getElementById("entrada").value = entrada;
+
+    // Calcula o valor da parcela
+    const valorParcela = (valor / (document.getElementById("parcelas").value)).toFixed(2);
+    document.getElementById("valor_parcela").value = valorParcela;
+  </script>
 </head>
 <body>
-  <h1>Negociar valor</h1>
-
+  <h1>Inativo</h1>
   <form action="/negociacao" method="post">
     <div class="form-group">
       <label for="valor">Valor do produto</label>
@@ -17,7 +26,6 @@
       <label for="entrada">Entrada (25%)</label>
       <input type="number" id="entrada" name="entrada" readonly>
     </div>
-
     <div class="form-group">
       <label for="parcelas">Parcelas</label>
       <select id="parcelas" name="parcelas">
@@ -30,19 +38,7 @@
       <label for="valor_parcela">Valor da parcela</label>
       <input type="number" id="valor_parcela" name="valor_parcela" readonly>
     </div>
-
     <button type="submit">Enviar</button>
   </form>
-
-  <script>
-    // Calcula o valor da entrada
-    const valor = document.getElementById("valor").value;
-    const entrada = (valor * 0.25).toFixed(2);
-    document.getElementById("entrada").value = entrada;
-
-    // Calcula o valor da parcela
-    const valorParcela = (valor / (document.getElementById("parcelas").value)).toFixed(2);
-    document.getElementById("valor_parcela").value = valorParcela;
-  </script>
 </body>
 </html>

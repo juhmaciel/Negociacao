@@ -1,72 +1,48 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Calculadora de desconto</title>
-  // Importa as bibliotecas necessárias
-const fs = require("fs");
-
-// Define as constantes
-const QNT_PARCELAS_MAX = 12;
-const VALOR_PARCELA_MAX = 150;
-
-// Obtém os dados do formulário
-const valor = Number(document.querySelector("input[name='valor']").value);
-const desconto_vista = Number(document.querySelector("input[name='desconto_vista']").value);
-const desconto_parcelado = Number(document.querySelector("input[name='desconto_parcelado']").value);
-const qtd_parcelas = Number(document.querySelector("input[name='qtd_parcelas']").value);
-
-// Valida a quantidade de parcelas
-if (qtd_parcelas > QNT_PARCELAS_MAX) {
-  alert("A quantidade de parcelas não pode ser superior a 12.");
-  return;
-}
-
-// Calcula o valor do desconto à vista
-const valor_desconto_vista = valor * desconto_vista / 100;
-
-// Calcula o valor de cada parcela
-const valor_parcela = valor / qtd_parcelas;
-
-// Calcula o valor do desconto parcelado
-const valor_desconto_parcelado = valor_parcela * desconto_parcelado / 100;
-
-// Calcula o valor final
-const valor_final = valor - valor_desconto_vista - valor_desconto_parcelado;
-
-// Gera o código de desconto
-const codigo_desconto = f"{desconto_vista}-{desconto_parcelado}-{qtd_parcelas}";
-
-// Exibe o resultado
-const resultado = `
-  <h2>Resultado</h2>
-  <ul>
-    <li>Código de desconto: ${codigo_desconto}</li>
-    <li>Valor do desconto: ${valor_desconto_vista + valor_desconto_parcelado}</li>
-    <li>Valor final: ${valor_final}</li>
-  </ul>
-`;
-
-document.querySelector("#resultado").innerHTML = resultado;
-
-// Salva o resultado em um arquivo
-fs.writeFile("resultado.html", resultado, "utf8", (err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log("Resultado salvo com sucesso.");
-  }
-});
+    <title>Negociação para AS/WP</title>
 </head>
 <body>
-  <h1>Calculadora de desconto</h1>
+    <h1>Calculadora de Descontos</h1>
+    <label for="valorTotal">Valor Total:</label>
+    <input type="number" id="valorTotal" step="0.01"><br>
 
-  <form action="/" method="post">
-    <input type="text" name="valor" placeholder="Valor do produto ou serviço">
-    <input type="number" name="desconto_vista" placeholder="Desconto à vista (%)">
-    <input type="number" name="desconto_parcelado" placeholder="Desconto parcelado (%)">
-    <input type="number" name="qtd_parcelas" placeholder="Quantidade de parcelas">
-    <button type="submit">Calcular</button>
-  </form>
+    <label for="pagamento">Método de Pagamento:</label>
+    <select id="pagamento">
+        <option value="avista">À Vista</option>
+        <option value="parcelado">Parcelado</option>
+    </select><br>
 
-  <div id="resultado"></div>
+    <label for="descontoPorcentagem">Desconto à Vista (%):</label>
+    <input type="number" id="descontoPorcentagem" step="0.01"><br>
+
+    <label for="numParcelas">Número de Parcelas:</label>
+    <input type="number" id="numParcelas" min="1" max="12"><br>
+
+    <button onclick="calcularDesconto()">Calcular Desconto</button><br>
+
+    <p id="resultado"></p>
+
+    <script>
+        function calcularDesconto() {
+            const valorTotal = parseFloat(document.getElementById("valorTotal").value);
+            const metodoPagamento = document.getElementById("pagamento").value;
+            const descontoPorcentagem = parseFloat(document.getElementById("descontoPorcentagem").value);
+            const numParcelas = parseInt(document.getElementById("numParcelas").value);
+
+            let valorComDesconto = valorTotal;
+
+            if (metodoPagamento === "avista" && descontoPorcentagem > 0) {
+                const desconto = (descontoPorcentagem / 100) * valorTotal;
+                valorComDesconto = valorTotal - desconto;
+            } else if (metodoPagamento === "parcelado" && numParcelas > 0) {
+                const valorParcela = Math.min(valorTotal / numParcelas, 150);
+                valorComDesconto = valorParcela * numParcelas;
+            }
+
+            document.getElementById("resultado").textContent = `Total a pagar: R$ ${valorComDesconto.toFixed(2)}`;
+        }
+    </script>
 </body>
 </html>
